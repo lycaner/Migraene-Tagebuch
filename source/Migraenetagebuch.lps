@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="9"/>
+    <BuildModes Active="Default"/>
+    <Units Count="14">
+      <Unit0>
+        <Filename Value="Migraenetagebuch.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="24"/>
+        <UsageCount Value="206"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="772"/>
+        <CursorPos X="25" Y="787"/>
+        <UsageCount Value="206"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="medikamente_unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form2"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="138"/>
+        <CursorPos X="14" Y="160"/>
+        <UsageCount Value="206"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="monat_jahr_unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="179"/>
+        <CursorPos X="5" Y="207"/>
+        <UsageCount Value="230"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="D:\Programme\lazarus\components\a new component\synapse\cryptlib-3.2.2\cryptlib.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="166"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="D:\Programme\lazarus\components\a new component\synapse\synapse40\source\lib\ssl_openssl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="786"/>
+        <CursorPos X="56" Y="799"/>
+        <UsageCount Value="166"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="my_mail_unit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form4"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="48"/>
+        <CursorPos X="5" Y="112"/>
+        <UsageCount Value="129"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="D:\Programme\lazarus\components\a new component\Precision Language pkg\Packages\pls_lazarus.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="3" Y="10"/>
+        <UsageCount Value="5"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="D:\Programme\lazarus\components\a new component\synapse\synapse40\source\lib\laz_synapse.lpk"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="4"/>
+        <DefaultSyntaxHighlighter Value="XML"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="D:\Programme\lazarus\components\a new component\synapse\synapse40\source\lib\mimemess.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="598"/>
+        <CursorPos Y="612"/>
+        <UsageCount Value="5"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="D:\Programme\lazarus\components\a new component\synapse\synapse40\source\lib\mimepart.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="5"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="D:\Programme\lazarus\components\a new component\synapse\visualsynapse-src.0.60\authentication.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="31"/>
+        <CursorPos X="3" Y="36"/>
+        <UsageCount Value="6"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="D:\Programme\lazarus\components\a new component\synapse\visualsynapse-src.0.60\ExecCGI.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="20"/>
+        <CursorPos X="3" Y="34"/>
+        <UsageCount Value="6"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="D:\Programme\lazarus\components\a new component\synapse\visualsynapse-src.0.60\visualserverbase.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="313"/>
+        <CursorPos X="12" Y="332"/>
+        <UsageCount Value="6"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit13>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="820" Column="68" TopLine="796"/>
+      </Position1>
+      <Position2>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="816" Column="5" TopLine="796"/>
+      </Position2>
+      <Position3>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="820" Column="8" TopLine="796"/>
+      </Position3>
+      <Position4>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="816" Column="46" TopLine="796"/>
+      </Position4>
+      <Position5>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="820" Column="10" TopLine="796"/>
+      </Position5>
+      <Position6>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="746" Column="68" TopLine="724"/>
+      </Position6>
+      <Position7>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="744" Column="7" TopLine="724"/>
+      </Position7>
+      <Position8>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="751" Column="9" TopLine="498"/>
+      </Position8>
+      <Position9>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="764" Column="7" TopLine="743"/>
+      </Position9>
+      <Position10>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="741" Column="33" TopLine="725"/>
+      </Position10>
+      <Position11>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="757" Column="3" TopLine="743"/>
+      </Position11>
+      <Position12>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="764" Column="3" TopLine="750"/>
+      </Position12>
+      <Position13>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="773" Column="39" TopLine="738"/>
+      </Position13>
+      <Position14>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="518" Column="25" TopLine="505"/>
+      </Position14>
+      <Position15>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="760" Column="9" TopLine="735"/>
+      </Position15>
+      <Position16>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="759" Column="13" TopLine="745"/>
+      </Position16>
+      <Position17>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="760" Column="10" TopLine="745"/>
+      </Position17>
+      <Position18>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="759" Column="14" TopLine="735"/>
+      </Position18>
+      <Position19>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="626" Column="6" TopLine="777"/>
+      </Position19>
+      <Position20>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="513" TopLine="503"/>
+      </Position20>
+      <Position21>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="636" TopLine="628"/>
+      </Position21>
+      <Position22>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="576" Column="26" TopLine="563"/>
+      </Position22>
+      <Position23>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="770" TopLine="754"/>
+      </Position23>
+      <Position24>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="715" Column="11" TopLine="701"/>
+      </Position24>
+      <Position25>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="716" Column="43" TopLine="702"/>
+      </Position25>
+      <Position26>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="717" Column="18" TopLine="705"/>
+      </Position26>
+      <Position27>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="775" TopLine="764"/>
+      </Position27>
+      <Position28>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="742" Column="3" TopLine="721"/>
+      </Position28>
+      <Position29>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="774" Column="5" TopLine="763"/>
+      </Position29>
+      <Position30>
+        <Filename Value="schmerz_tabelle_unit.pas"/>
+        <Caret Line="775" Column="5" TopLine="763"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>
