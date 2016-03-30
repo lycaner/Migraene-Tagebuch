@@ -5,20 +5,49 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, sqlite3conn, sqldb, db, XMLConf, eventlog, FileUtil,
-  DBDateTimePicker, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  StdCtrls, DbCtrls, Buttons, DBExtCtrls, ExtCtrls, XMLPropStorage, Menus;
-
+  Classes, SysUtils, sqlite3conn, sqldb, DB, eventlog, FileUtil, Process,
+  DBDateTimePicker, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
+  DBCtrls, Buttons, DBExtCtrls, ExtCtrls, XMLPropStorage, ActnList, Menus, LazLogger;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    DataSource1: TDataSource;
-    DataSource2: TDataSource;
-    DataSource3: TDataSource;
-    DataSource4: TDataSource;
+    ApplicationProperties1: TApplicationProperties;
+    Help_Thai_off: TAction;
+    Help_Thai: TAction;
+    CrashReport: TAction;
+    Help_Fi: TAction;
+    Help_En: TAction;
+    Help_It: TAction;
+    Help_Fr: TAction;
+    Help_Dt: TAction;
+    MenuItem28: TMenuItem;
+    MenuItem29: TMenuItem;
+    MenuItem30: TMenuItem;
+    MenuItem31: TMenuItem;
+    MenuItem32: TMenuItem;
+    MenuItem33: TMenuItem;
+    Tagalog: TAction;
+    Englisch: TAction;
+    Italienisch: TAction;
+    Franzoesisch: TAction;
+    Deutsch: TAction;
+    MenuItem26: TMenuItem;
+    MenuItem27: TMenuItem;
+    Print_Editor: TAction;
+    Print_Statistik: TAction;
+    Print_PreView: TAction;
+    Monat_and_Jahr: TAction;
+    Medikamente: TAction;
+    ActionClose: TAction;
+    ActionList1: TActionList;
+    DSDay: TDataSource;
+    DSYear: TDataSource;
+    DSMonth: TDataSource;
+    DSMedikamente: TDataSource;
+    DBCheckBox1: TDBCheckBox;
     DBDateEdit3: TDBDateEdit;
     DBLookupComboBox1: TDBLookupComboBox;
     DBLookupComboBox10: TDBLookupComboBox;
@@ -120,6 +149,8 @@ type
     DBLookupComboBox98: TDBLookupComboBox;
     DBNavigator1: TDBNavigator;
     DBRadioGroup1: TDBRadioGroup;
+    EventLog1: TEventLog;
+    ImageList1: TImageList;
     Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
@@ -244,34 +275,42 @@ type
     MenuItem9: TMenuItem;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
-    SQLite3Connection1: TSQLite3Connection;
-    SQLQuery1: TSQLQuery;
-    SQLQuery2: TSQLQuery;
-    SQLQuery3: TSQLQuery;
-    SQLQuery4: TSQLQuery;
-    SQLTransaction1: TSQLTransaction;
     StatusBar1: TStatusBar;
     TrayIcon1: TTrayIcon;
-    XMLConfig1: TXMLConfig;
+    XMLPropStorage1: TXMLPropStorage;
 
-     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-     procedure FormCreate(Sender: TObject);
-     procedure FormHide(Sender: TObject);
-     procedure MenuItem11Click(Sender: TObject);
-     procedure MenuItem24Click(Sender: TObject);
-     procedure MenuItem25Click(Sender: TObject);
-     procedure MenuItem4Click(Sender: TObject);
-     procedure MenuItem5Click(Sender: TObject);
+    procedure ActionCloseExecute(Sender: TObject);
+
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormHide(Sender: TObject);
+    procedure Help_DtExecute(Sender: TObject);
+    procedure Help_EnExecute(Sender: TObject);
+    procedure Help_FiExecute(Sender: TObject);
+    procedure MedikamenteExecute(Sender: TObject);
+    procedure Monat_and_JahrExecute(Sender: TObject);
+    procedure Print_EditorExecute(Sender: TObject);
+    procedure Print_PreViewExecute(Sender: TObject);
 
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
-
-
     procedure StoreFormState(Sender: TObject);
-        procedure RestoreFormState(Sender: TObject);
+    procedure RestoreFormState(Sender: TObject);
+
+    procedure RunVersion(Sender: TObject);
+    procedure RunBackUp(Sender: TObject);
+    procedure RunTagalogHelp(Sender: TObject);
+    procedure RunEnglishHelp(Sender: TObject);
+    procedure RunGermanHelp(Sender: TObject);
+     procedure RunHelp(Sender: TObject);
+    procedure RunINILoad(Sender: TObject);
+    procedure RunINISave(Sender: TObject);
+
+    //   TLiveSelection = (lsMoney, lsChilds, lsTime);
+    //   TLive = Array[0..1] of TLiveSelection;
+
   private
     { private declarations }
-    procedure AppException(Sender: TObject; E: Exception);
   public
     { public declarations }
   end;
@@ -282,368 +321,502 @@ var
 implementation
 
 {$R *.lfm}
-uses unit2,Unit3,smtpsend,ssl_openssl,Mimepart,Mimemess;
+uses uMediEdit, Unit3, udm1, frm_Versio_about, frm_help;
+
 { TForm1 }
 
-procedure TForm1.AppException(Sender: TObject; E: Exception);
-var
-  sLogFile: String;
-  f: Text;
-  DirStr: string;
-begin
-if not DirectoryExists('./log') then
-   DirStr:= 'log';
-  CreateDir(DirStr);
 
-  sLogFile:='./log/crashreport.log';
-  if not FileExists(sLogFile) then
-  begin
-    AssignFile(f, sLogFile);
-    ReWrite(f);
-  end
-  else
-  begin
-    AssignFile(f, sLogFile);
-    Append(f)
-  end;
-  WriteLn(f, formatdatetime('yyyy mm dd hh:nn:ss',now)+#9+'Exception:'+E.Message);
-  DumpExceptionBackTrace(f);
-  CloseFile(f);
-end;
 procedure TForm1.SpeedButton1Click(Sender: TObject);
+var
+  MyForm: TFormMediEdit;
 begin
-StoreFormState(self);
-Form2.Show;
-  Form1.Hide;
+  if DM1.QDay.UpdateStatus <> TUpdateStatus.usUnmodified then
+    DM1.QDay.ApplyUpdates;
+
+  MyForm := TFormMediEdit.Create(nil);
+  try
+    MyForm.ShowModal;
+  finally
+    MyForm.Free;
+  end;
 end;
 
 procedure TForm1.SpeedButton2Click(Sender: TObject);
+var
+  MyForm3: TForm3;
 begin
- StoreFormState(self);
-Form3.Show;
-Form1.Hide;
-end;
 
+  if DM1.QDay.UpdateStatus <> TUpdateStatus.usUnmodified then
+    DM1.QDay.ApplyUpdates;
+
+  MyForm3 := TForm3.Create(nil);
+  try
+    MyForm3.ShowModal;
+  finally
+    MyForm3.Free;
+  end;
+  DM1.QDay.Active := True;
+  DM1.QYear.Active := True;
+  DM1.QMonth.Active := True;
+  DM1.QMedikamente.Active := True;
+end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
   DirStr: string;
+  i: Int32;
+    s: string;
+
 begin
 
-{Testen ob Directory existiert wenn nicht erstelle Directory}
-if not DirectoryExists('./log') then
-   DirStr:= 'log';
+  {Testen ob Directory existiert wenn nicht erstelle Directory}
+  if not DirectoryExists('./sql') then
+    DirStr := 'sql';
   CreateDir(DirStr);
 
-  Application.OnException:=@AppException;
-
-if not DirectoryExists('./sql') then
-   DirStr:= 'sql';
+  if not DirectoryExists('./export') then
+    DirStr := 'export';
   CreateDir(DirStr);
 
   if not DirectoryExists('./img') then
-   DirStr:= 'img';
+    DirStr := 'img';
   CreateDir(DirStr);
 
   if not DirectoryExists('./ini') then
-   DirStr:= 'ini';
-   CreateDir(DirStr);
+    DirStr := 'ini';
+  CreateDir(DirStr);
+
+  if not DirectoryExists('./log') then
+    DirStr := 'log';
+  CreateDir(DirStr);
+
+  if not DirectoryExists('./archiv') then
+    DirStr := 'archiv';
+  CreateDir(DirStr);
+
+  EventLog1.FileName := './log/CrashReport.txt';
+  EventLog1.Active := True;
+
+  XMLPropStorage1.FileName := './ini/MainForm.ini';
+  XMLPropStorage1.Restore;
+
+   RunINISave(self);
+   RunINILoad(self);
+
+  {schliesst Verbindung zu SQLite Datenbanken }
+  //SQLite3Connection1.Close;
+
+  {Öffnet Datenbank Datei migränetagebuch}
+  {Testet Datenbank Connection}
+  DM1.DatabaseName := './sql/migraenetagebuch.sql3db';
+  if DM1.TestAndOpenDB then
+    StatusBar1.Panels.Add.Text := 'Verbindung hergestellt';
+
+  {Erstellen der Tabellen ins Datenmodul ausgelagert}
+
+  // Oeffnet Verbindung für Form 1 Daten.
+  DM1.QDay.Active := True;
+  DM1.QYear.Active := True;
+  DM1.QMonth.Active := True;
+  DM1.QMedikamente.Active := True;
 
 
 
 
+    // start with Parameter
 
-{schliesst Verbindung zu SQLite Datenbanken }
-  SQLite3Connection1.Close;
+  s := '';
+  for i := 1 to Application.ParamCount do
+  begin
+    if Application.Params[i] = '-h' then
+      Begin
+      try
+RunHelp(self);
+       Close;
+       Except
+        DebugLn('Error: Can`t Start Help Menue');
+      end;
+       Close;
+    end;
 
-    {Öffnet Datenbank Datei migränetagebuch}
-    SQLite3Connection1.DatabaseName:='./sql/migraenetagebuch.sql3db';
-  SQLTransaction1.Database:=SQLite3Connection1;
-  SQLQuery1.Transaction:=SQLTransaction1;
-  SQLite3Connection1.Open;
+    if Application.Params[i] = '-v' then
+      Begin
+      try
+RunVersion(self);
+       Close;
+       Except
+         DebugLn('Error: Can`t Start Version Menue Short');
 
-  {erstellt die Tabellle DateTime}
+       end;
+       Close;
+      end;
 
-  SQLQuery1.SQL.text := 'CREATE TABLE IF NOT EXISTS tblDateTime (ID AUTO_INCREMENT PRIMARY KEY,Jahr Date, Monat Date, aktDatum Date, "Printed" VARCHAR(15), "00.00" VARCHAR(10), "00.15" VARCHAR(25),"00.30" VARCHAR(25),"00.45" VARCHAR(25),"01.00" VARCHAR(25),"01.15" VARCHAR(25),"01.30" VARCHAR(25),"01.45" VARCHAR(25),"02.00" VARCHAR(25),"02.15" VARCHAR(25),"02.30" VARCHAR(25),"02.45" VARCHAR(25),"03.00" VARCHAR(25),"03.15" VARCHAR(25),"03.30" VARCHAR(25),"03.45" VARCHAR(25),"04.00" VARCHAR(25),"04.15" VARCHAR(25),"04.30" VARCHAR(25),"04.45" VARCHAR(25),"05.00" VARCHAR(25),"05.15" VARCHAR(25),"05.30" VARCHAR(25),"05.45" VARCHAR(25),"06.00" VARCHAR(25),"06.15" VARCHAR(25),"06.30" VARCHAR(25),"06.45" VARCHAR(25),"07.00" VARCHAR(25),"07.15" VARCHAR(25),"07.30" VARCHAR(25),"07.45" VARCHAR(25),"08.00" VARCHAR(25),"08.15" VARCHAR(25),"08.30" VARCHAR(25),"08.45" VARCHAR(25),"09.00" VARCHAR(25),"09.15" VARCHAR(25),"09.30" VARCHAR(25),"09.45" VARCHAR(25),"10.00" VARCHAR(25),"10.15" VARCHAR(25),"10.30" VARCHAR(25),"10.45" VARCHAR(25),"11.00" VARCHAR(25),"11.15" VARCHAR(25),"11.30" VARCHAR(25),"11.45" VARCHAR(25),"12.00" VARCHAR(25),"12.15" VARCHAR(25),"12.30" VARCHAR(25),"12.45" VARCHAR(25),"13.00" VARCHAR(25),"13.15" VARCHAR(25),"13.30" VARCHAR(25),"13.45" VARCHAR(25),"14.00" VARCHAR(25),"14.15" VARCHAR(25),"14.30" VARCHAR(25),"14.45" VARCHAR(25),"15.00" VARCHAR(25),"15.15" VARCHAR(25),"15.30" VARCHAR(25),"15.45" VARCHAR(25),"16.00" VARCHAR(25),"16.15" VARCHAR(25),"16.30" VARCHAR(25),"16.45" VARCHAR(25),"17.00" VARCHAR(25),"17.15" VARCHAR(25),"17.30" VARCHAR(25),"17.45" VARCHAR(25),"18.00" VARCHAR(25),"18.15" VARCHAR(25),"18.30" VARCHAR(25),"18.45" VARCHAR(25),"19.00" VARCHAR(25),"19.15" VARCHAR(25),"19.30" VARCHAR(25),"19.45" VARCHAR(25),"20.00" VARCHAR(25),"20.15" VARCHAR(25),"20.30" VARCHAR(25),"20.45" VARCHAR(25),"21.00" VARCHAR(25),"21.15" VARCHAR(25),"21.30" VARCHAR(25),"21.45" VARCHAR(25),"22.00" VARCHAR(25),"22.15" VARCHAR(25),"22.30" VARCHAR(25),"22.45" VARCHAR(25),"23.00" VARCHAR(25),"23.15" VARCHAR(25),"23.30" VARCHAR(25),"23.45" VARCHAR(25))';
-  SQLQuery1.ExecSQL;
-  SQLTransaction1.commit;
+    if Application.Params[i] = '-b' then
+      Begin
+      try
+      RunBackUp(self);
+      Close;
+      Except
+        DebugLn('Error: Can`t Start BackUp Short');
+        End;
+      Close;
+    end;
 
-{erstellt die Tabelle Jahr}
-SQLQuery2.SQL.text := 'CREATE TABLE IF NOT EXISTS tblJahr (ID AUTO_INCREMENT Primary KEY, Jahr Date)';
-SQLQuery2.ExecSQL;
-SQLTransaction1.commit;
+    if Application.Params[i] = '--backup' then
+      Begin
+      try
+      RunBackUp(self);
+      Close;
+      Except
+        DebugLn('Error: Can`t Start BackUp Long');
+        End;
+      Close;
+    End;
 
-{erstellt die Tabelle Monat}
-SQLQuery3.SQL.text := 'CREATE TABLE IF NOT EXISTS tblMonth (ID AUTO_INCREMENT Primary KEY, Monat Date)';
-SQLQuery3.ExecSQL;
-SQLTransaction1.commit;
+    if Application.Params[i] = '--version' then
+      Begin
+      try
+RunVersion(self);
+Close;
+    Except
+      DebugLn('Error: Can`t Start Version Menue Long');
+      End;
+    Close;
+    End;
 
-SQLQuery4.SQL.text := 'CREATE TABLE IF NOT EXISTS tblMedikamente (ID AUTO_INCREMENT Primary KEY, Medikament VARCHAR(25), Image BLOB)';
-SQLQuery4.ExecSQL;
-SQLTransaction1.commit;
+    if Application.Params[i] = '--Help' then
+      Begin
+      try
+RunHelp(self);
+Close;
+      Except
+        DebugLn('Error: Can`t Start Help Menue Long');
+        End;
+      Close;
+    End;
 
-{Löscht die Tabelle Jahr}
-SQLQuery2.SQL.Text:='DROP TABLE IF EXISTS tblJahr';
-SQLQuery2.ExecSQL;
-SQLTransaction1.commit;
+    if Application.Params[i] = '--Help-DE' then
+      Begin
+      try
+      RunGermanHelp(self);
+      Close;
+      Except
+        DebugLn('Error: Can`t Start Help File DE');
+        End;
+      Close;
+    End;
 
-{Erstellt Tabelle Jahr und für diverse Jahre als Einträge hinzu}
-SQLQuery2.SQL.text := 'CREATE TABLE IF NOT EXISTS tblJahr ( ID AUTO_INCREMENT Primary KEY, Jahr VARCHAR(6))';
-SQLQuery2.ExecSQL;
-SQLTransaction1.commit;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2010")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2011")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2012")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2013")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2014")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2015")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2016")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2017")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2018")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2019")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2020")';
-SQLQuery2.ExecSQL;
-SQLQuery2.SQL.text := 'INSERT INTO tblJahr VALUES (NULL, "2009")';
-SQLQuery2.ExecSQL;
-SQLTransaction1.commit;
+    if Application.Params[i] = '--Help-EN' then
+      Begin
+      try
+      RunEnglishHelp(self);
+      Close;
+      Except
+        DebugLn('Error: Can`t Start Help File EN');
+        End;
+      Close;
+    End;
 
+    if Application.Params[i] = '--Help-TAGALOG' then
+      Begin
+      try
+      RunTagalogHelp(self);
+      Close;
+      Except
+        DebugLn('Error: Can`t Start Help File Tagalog');
+        End;
+      Close;
+      end;
 
-{Löscht die Tabelle Monat}
-SQLQuery3.SQL.Text:='DROP TABLE IF EXISTS tblMonth';
-SQLQuery3.ExecSQL;
-SQLTransaction1.commit;
-
-{Erstellt Tabelle Monat und für diverse Monate als Einträge hinzu}
-SQLQuery3.SQL.text := 'CREATE TABLE IF NOT EXISTS tblMonth (ID AUTO_INCREMENT Primary KEY, Month VARCHAR(25))';
-SQLQuery3.ExecSQL;
-SQLTransaction1.commit;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "Januar")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "Februar")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "März")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "April")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "Mai")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "Juni")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "Juli")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "August")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "September")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "Oktober")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "November")';
-SQLQuery3.ExecSQL;
-SQLQuery3.SQL.text := 'INSERT INTO tblMonth VALUES (NULL, "Dezember")';
-SQLQuery3.ExecSQL;
-SQLTransaction1.commit;
-
-
-{Testet Datenbank Connection}
-SQLite3Connection1.Open;
-if SQLite3Connection1.Connected then
-StatusBar1.Panels.Add.Text:='Verbindung hergestellt';
-
-SQLQuery1.Close;
-SQLQuery1.SQL.text:='SELECT * FROM tblDateTime';
-SQLQuery1.Open;
-
-SQLQuery2.Close;
-SQLQuery2.SQL.text:='SELECT * FROM tblJahr';
-SQLQuery2.Open;
-
-SQLQuery3.Close;
-SQLQuery3.SQL.text:='SELECT * FROM tblMonth';
-SQLQuery3.Open;
-
-SQLQuery1.Close;
-SQLQuery1.DataBase.DatabaseName:='SQLite3Connection1.DatabaseName';
-//SQLQuery1.FileName:='migraenetagebuch.sql3db';
-SQLQuery1.SQL.Text:='Select * FROM tblDateTime';
-SQLQuery1.Open;
-SQLQuery1.Active:=True;
-
-SQLQuery2.Close;
-SQLQuery2.DataBase.DatabaseName:='SQLite3Connection1.DatabaseName';
-// SQLQuery2.FileName:='migraenetagebuch.sql3db';
-SQLQuery2.SQL.Text:='Select * FROM tblJahr';
-SQLQuery2.Open;
-SQLQuery2.Active:=True;
-
-SQLQuery3.Close;
-SQLQuery3.DataBase.DatabaseName:='SQLite3Connection1.DatabaseName';
-// SQLQuery3.FileName:='migraenetagebuch.sql3db';
-SQLQuery3.SQL.Text:='Select * FROM tblMonth';
-SQLQuery3.Open;
-SQLQuery3.Active:=True;
-
-RestoreFormState(self);
+end;
 
 end;
 
 procedure TForm1.FormHide(Sender: TObject);
 begin
-  TrayIcon1.Visible:=True;
-   StoreFormState(self);
-end;
-
-procedure TForm1.MenuItem11Click(Sender: TObject);
-begin
+  TrayIcon1.Visible := True;
 
 end;
 
-procedure TForm1.MenuItem24Click(Sender: TObject);
-begin
-  Form1.StoreFormState(self);
-
- Form1.SQLQuery1.active:=False;
- Form1.SQLQuery2.active:=False;
- Form1.SQLQuery3.active:=False;
- Form1.SQLQuery4.active:=False;
-
- Form1.SQLQuery1.Close;
-Form1.SQLQuery2.Close;
-Form1.SQLQuery3.Close;
-Form1.SQLQuery4.Close;
-
-    Form1.SQLQuery1.active:=False;
- Form1.SQLite3Connection1.CloseTransactions;
- Form1.SQLite3Connection1.CloseDataSets;
-Form1.SQLite3Connection1.Connected:=False;
- Form1.SQLite3Connection1.Free;
- Close;
-end;
-
-procedure TForm1.MenuItem25Click(Sender: TObject);
+procedure TForm1.Help_DtExecute(Sender: TObject);
 var
-  m:TMimemess;
-  l:tstringlist;
-  p: TMimepart;
+  AProcess: TProcess;
 begin
-  m:=TMimemess.create;
-  l:=tstringlist.create;
   try
-    p := m.AddPartMultipart('mixed', nil);
-    l.loadfromfile('./log/crashreport.log');
-    m.AddPartText(l,p);
-    m.AddPartBinaryFromFile('./log/crashreport.log',p);
-    m.header.from:='cschaer131@bluewin.ch';
-    m.header.tolist.add('cschaer131@bluewin.ch');
-    m.header.subject:='Crash Report';
-    m.EncodeMessage;
-    // memo1.lines.assign(m.lines);
-    //if you wish to send it by SMTP too, then:
-    SendToRaw('from Mail', 'to mail', 'smtp_Server', m.lines, 'UserName', 'Password');
-  finally
-    m.free;
-    l.free;
+    AProcess := TProcess.Create(nil);
+    AProcess.CommandLine :=
+      './help/Docview/docview.exe ./help/help/Migraene_Tagebuch.inf';
+    AProcess.Options := AProcess.Options + [poWaitOnExit];
+    AProcess.Execute;
+    AProcess.Free;
+  except
+    DebugLn('Error: Can`t Start Help De');
   end;
 end;
 
-procedure TForm1.MenuItem4Click(Sender: TObject);
+procedure TForm1.Help_EnExecute(Sender: TObject);
+var
+  AProcess: TProcess;
 begin
-  StoreFormState(self);
-Form2.Show;
-  Form1.Hide;
+  try
+    AProcess := TProcess.Create(nil);
+    AProcess.CommandLine :=
+      './help/Docview/docview.exe ./help/help/migraine_diary.en.inf';
+    AProcess.Options := AProcess.Options + [poWaitOnExit];
+    AProcess.Execute;
+    AProcess.Free;
+  except
+    DebugLn('Error: Can`t Start Help EN');
+  end;
+
 end;
 
-procedure TForm1.MenuItem5Click(Sender: TObject);
+procedure TForm1.Help_FiExecute(Sender: TObject);
+var
+  AProcess: TProcess;
 begin
-  StoreFormState(self);
-Form3.Show;
-Form1.Hide;
+  try
+    AProcess := TProcess.Create(nil);
+    AProcess.CommandLine :=
+      './help/Docview/docview.exe ./help/help/migraine_diary.ph.inf';
+    AProcess.Options := AProcess.Options + [poWaitOnExit];
+    AProcess.Execute;
+    AProcess.Free;
+  except
+    DebugLn('Error: Can`t Start Help Tagalog');
+  end;
 end;
 
+procedure TForm1.MedikamenteExecute(Sender: TObject);
+
+var
+  MyForm: TFormMediEdit;
+begin
+  if DM1.QDay.UpdateStatus <> TUpdateStatus.usUnmodified then
+    DM1.QDay.ApplyUpdates;
+
+  MyForm := TFormMediEdit.Create(nil);
+  try
+    MyForm.ShowModal;
+  finally
+    MyForm.Free;
+  end;
+end;
+
+procedure TForm1.Monat_and_JahrExecute(Sender: TObject);
+var
+  MyForm3: TForm3;
+begin
+
+  if DM1.QDay.UpdateStatus <> TUpdateStatus.usUnmodified then
+    DM1.QDay.ApplyUpdates;
+
+  MyForm3 := TForm3.Create(nil);
+  try
+    MyForm3.ShowModal;
+  finally
+    MyForm3.Free;
+  end;
+  DM1.QDay.Active := True;
+  DM1.QYear.Active := True;
+  DM1.QMonth.Active := True;
+  DM1.QMedikamente.Active := True;
+
+end;
+
+procedure TForm1.Print_EditorExecute(Sender: TObject);
+begin
+  DM1.frReport1.DesignReport;
+end;
+
+procedure TForm1.Print_PreViewExecute(Sender: TObject);
+begin
+  DM1.frReport1.LoadFromFile('./prnt/monats_uebersicht.lrf');
+  DM1.frReport1.ShowReport;
+
+end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
 
-//Form1.SQLQuery1.ApplyUpdates;
-//Form1.SQLQuery2.ApplyUpdates;
-//Form1.SQLQuery3.ApplyUpdates;
-//Form1.SQLQuery4.ApplyUpdates;
+  if DM1.QDay.UpdateStatus <> TUpdateStatus.usUnmodified then
+    DM1.QDay.ApplyUpdates;
+  DM1.QDay.Active := False;
 
- Form1.StoreFormState(self);
+  Form1.EventLog1.Active := False;
 
- Form1.SQLQuery1.active:=False;
- Form1.SQLQuery2.active:=False;
- Form1.SQLQuery3.active:=False;
- Form1.SQLQuery4.active:=False;
+  Form1.EventLog1.Free;
 
- Form1.SQLQuery1.Close;
-Form1.SQLQuery2.Close;
-Form1.SQLQuery3.Close;
-Form1.SQLQuery4.Close;
+end;
 
-    Form1.SQLQuery1.active:=False;
- Form1.SQLite3Connection1.CloseTransactions;
- Form1.SQLite3Connection1.CloseDataSets;
-Form1.SQLite3Connection1.Connected:=False;
- Form1.SQLite3Connection1.Free;
+procedure TForm1.ActionCloseExecute(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TForm1.RestoreFormState(Sender: TObject);
-var
-  LastWindowState: TWindowState;
 begin
-  with XMLConfig1 do begin
-    xmlconfig1.Filename:='./ini/window1.ini';
-
-    LastWindowState := TWindowState(GetValue('WindowState', Integer(WindowState)));
-
-    if LastWindowState = wsMaximized then begin
-      WindowState := wsNormal;
-      BoundsRect := Bounds(
-        GetValue('RestoredLeft', RestoredLeft),
-        GetValue('RestoredTop', RestoredTop),
-        GetValue('RestoredWidth', RestoredWidth),
-        GetValue('RestoredHeight', RestoredHeight));
-      WindowState := wsMaximized;
-    end else begin
-      WindowState := wsNormal;
-      BoundsRect := Bounds(
-        GetValue('NormalLeft', Left),
-        GetValue('NormalTop', Top),
-        GetValue('NormalWidth', Width),
-        GetValue('NormalHeight', Height));
-       end;
 end;
-     end;
 
 procedure TForm1.StoreFormState(Sender: TObject);
 
 begin
-  with XMLConfig1 do begin
-    xmlconfig1.Filename:='./ini/window1.ini';
-    SetValue('NormalLeft', Left);
-    SetValue('NormalTop', Top);
-    SetValue('NormalWidth', Width);
-    SetValue('NormalHeight', Height);
-
-    SetValue('RestoredLeft', RestoredLeft);
-    SetValue('RestoredTop', RestoredTop);
-    SetValue('RestoredWidth', RestoredWidth);
-    SetValue('RestoredHeight', RestoredHeight);
-
-    SetValue('WindowState', Integer(WindowState));
 
 end;
+ procedure TForm1.RunGermanHelp(Sender: TObject);
 
-   end;
+var
+  AProcess: TProcess;
+
+begin
+  try
+    form1.Hide;
+    AProcess := TProcess.Create(nil);
+    AProcess.CommandLine :=
+      './help/Docview/docview.exe ./help/help/migraenetagebuch.inf';
+
+    AProcess.Options := AProcess.Options + [poWaitOnExit];
+    AProcess.Execute;
+    AProcess.Free;
+  except
+    DebugLn('Error: Can`t Start Help German');
+  end;
+end;
+ procedure TForm1.RunEnglishHelp(Sender: TObject);
+
+var
+  AProcess: TProcess;
+
+begin
+  try
+    form1.Hide;
+    AProcess := TProcess.Create(nil);
+    AProcess.CommandLine :=
+      './help/Docview/docview.exe ./help/help/migraine_diary.en.inf';
+
+    AProcess.Options := AProcess.Options + [poWaitOnExit];
+    AProcess.Execute;
+    AProcess.Free;
+  except
+    DebugLn('Error: Can`t Start Help Englisch');
+  end;
+
+end;
+ procedure TForm1.RunTagalogHelp(Sender: TObject);
+
+var
+  AProcess: TProcess;
+
+begin
+  try
+    form1.Hide;
+    AProcess := TProcess.Create(nil);
+    AProcess.CommandLine :=
+      './help/Docview/docview.exe ./help/help/migraine_diary.ph.inf';
+
+    AProcess.Options := AProcess.Options + [poWaitOnExit];
+    AProcess.Execute;
+    AProcess.Free;
+  except
+    DebugLn('Error: Can`t Start Help Tagalog');
+  end;
+
+end;
+ procedure TForm1.RunBackUp(Sender: TObject);
+
+begin
+  try
+     form1.Hide;
+    DM1.AbZipper1.FileName := './archiv/backup.zip';
+    DM1.AbZipper1.OpenArchive('./archiv/backup.zip');
+    DM1.AbZipper1.AddFiles('./sql/*.sql3db', 0);
+
+
+    DM1.AbZipper1.Save;
+
+    DM1.AbZipper1.CloseArchive;
+    DM1.AbZipper1.Free;
+  except
+    DebugLn('Error: Can`t Create BackUp Archiv');
+  end;
+
+end;
+ procedure TForm1.RunHelp(Sender: TObject);
+ var
+  MyForm22: TForm2;
+begin
+
+  MyForm22 := TForm2.Create(nil);
+  try
+    MyForm22.ShowModal;
+  finally
+    MyForm22.Free;
+
+end;
+  end;
+
+    procedure TForm1.RunVersion(Sender: TObject);
+ var
+  MyForm14: TForm4;
+begin
+
+  MyForm14 := TForm4.Create(nil);
+  try
+    MyForm14.ShowModal;
+  finally
+    MyForm14.Free;
+
+end;
+  end;
+
+ procedure TForm1.RunINISave(Sender: TObject);
+ var
+       FILEVERSION, PRODUCTVERSION, VERSIONINFO, ProductName, StringFileInfo,
+    SHA, SHA1_EXE, CompanyName, FileDescription, InternalName,
+    LegalCopyright, OriginalFilename :STRING ;
+  BEGIN
+
+  //  if not fileexists('./ini/migrainediary.ini') then
+  //  Begin
+
+    DM1.IniPropStorage1.IniFileName:='./ini/migrainediary.ini';
+    SHA := inttostr(DM1.DCP_sha1_1.GetHashCode)   ;
+    DM1.IniPropStorage1.Active:=True;
+    DM1.IniPropStorage1.WriteString(SHA1_EXE,SHA);
+
+//    DM1.IniPropStorage1.StoredValues.Values[SHA1_EXE].Value:=SHA;
+ //   DM1.IniPropStorage1.StoredValue[SHA1_EXE].Value:=SHA;
+    DM1.IniPropStorage1.Save;
+    DM1.IniPropStorage1.Active:=false;
+    DM1.IniPropStorage1.Save;
+  //  DM1.IniPropStorage1.Free;
+ //   end;
+  end;
+         procedure TForm1.RunINILoad(Sender: TObject);
+  var
+       FILEVERSION, PRODUCTVERSION, VERSIONINFO, ProductName, StringFileInfo,
+    SHA, SHA1_EXE, CompanyName, FileDescription, InternalName,
+    LegalCopyright, OriginalFilename :STRING ;
+
+    Begin
+
+    SHA := inttostr(DM1.DCP_sha1_1.GetHashCode)   ;
+    DM1.IniPropStorage1.IniFileName:='./ini/migrainediary.ini';
+    DM1.IniPropStorage1.Active:=true;
+
+    DM1.IniPropStorage1.ReadString(FILEVERSION,'');
+    DM1.IniPropStorage1.ReadString(PRODUCTVERSION,'');
+
+    DM1.IniPropStorage1.ReadString(SHA1_EXE,'');
+    DM1.IniPropStorage1.ReadString(CompanyName,'');
+
+    DM1.IniPropStorage1.ReadString(FileVersion,'');
+
+    DM1.IniPropStorage1.ReadString(InternalName,'');
+    DM1.IniPropStorage1.ReadString(LegalCopyright,'');
+    DM1.IniPropStorage1.ReadString(OriginalFilename,'');
+    DM1.IniPropStorage1.ReadString(ProductName,'');
+    DM1.IniPropStorage1.Active:=false;
+    DM1.IniPropStorage1.Free;
+    end;
 end.
-
